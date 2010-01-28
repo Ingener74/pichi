@@ -1,0 +1,21 @@
+== Configuration ==
+Open _config.php_ and modify config.
+
+Jabber server configuration:
+{{{
+$config['server'] = "YOUR JABBER SERVER HERE"; // Jabber server
+$config['port'] = 5222; //PORT
+$config['room_service'] = "conference"; // CHAT SERVICE
+$config['room'] = "ROOM"."@".$config['room_service'].".".$config['server']; // ROOM TO AUTOJOIN 
+}}}
+
+User configuration:
+{{{
+$config['user'] = "USER"; // USER
+$config['room_user'] = "USER IN ROOM"; 
+$config['password'] = "PASSWORD";
+$config['resource'] = "RESOURCE";
+$config['status'] = "BOT STATUS";
+}}}
+
+And enjoy ;)
