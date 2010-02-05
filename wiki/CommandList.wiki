@@ -3,12 +3,12 @@
  * *!wtf name* - show definition from db-wiki
  * *!dfn name=val* - set definition to db-wiki
  * *!set name=val* - set pichi option
- * *!gc [name]* - show avalible options
+ * *!gc [name]* - show available options
  * *!users [nick|jid]* - show users list
  * *!msg [nick|jid]* message - send message from bot to user
  * *!ping [nick|jid]* - ping request to user
  * *!join room nick [status]* - join room (or change nick)
- * *!left room nick [status]* - left room
+ * *!left room nick [status]* - leave the room
  * *!quit* - quit :)
  * *!version* - show version of bot
 
