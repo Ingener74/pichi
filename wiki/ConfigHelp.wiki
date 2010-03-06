@@ -1,21 +1,21 @@
 == Configuration ==
-Open _config.php_ and modify config.
+Open _pichi.xml_ and modify config.
 
 Jabber server configuration:
 {{{
-$config['server'] = "YOUR JABBER SERVER HERE"; // Jabber server
-$config['port'] = 5222; //PORT
-$config['room_service'] = "conference"; // CHAT SERVICE
-$config['room'] = "ROOM"."@".$config['room_service'].".".$config['server']; // ROOM TO AUTOJOIN 
+<option Name="server" type="string">*JABBER_SERVER*</option>
+<option Name="port" type="int">*5222*</option>
+<option Name="room" type="string">*ROOM*@conference.jabber.uruchie.org</option>
+<option Name="db_file" type="string">*pichi.db*</option>
 }}}
 
 User configuration:
 {{{
-$config['user'] = "USER"; // USER
-$config['room_user'] = "USER IN ROOM"; 
-$config['password'] = "PASSWORD";
-$config['resource'] = "RESOURCE";
-$config['status'] = "BOT STATUS";
+<option Name="user" type="string">USER_NAME</option>
+<option Name="room_user" type="string">USER_NAME_IN_ROOM</option>
+<option Name="password" type="string">PASSWORD</option>
+<option Name="resource" type="string">SIMPLE_RESOURCE</option>
+<option Name="status" type="string">STATUS</option>
 }}}
 
 And enjoy ;)
