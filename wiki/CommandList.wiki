@@ -1,14 +1,22 @@
 == Command list of pichi bot ==
  * *!log n* - Show log of messages
  * *!wtf name* - show definition from db-wiki
+ * *!wtfcount* - count all wiki pages
+ * *!wtfrand* - show random page
+ * *!top* - show top 10 of words in database
+ * *!talkers* - top 10 user activities
+ * *!count* - count words lexemes
  * *!dfn name=val* - set definition to db-wiki
  * *!set name=val* - set pichi option
  * *!gc [name]* - show available options
  * *!users [nick|jid]* - show users list
- * *!msg [nick|jid]* message - send message from bot to user
+ * *!msg [nick|jid|room] message [type]* - send message from bot to user
  * *!ping [nick|jid]* - ping request to user
  * *!join room nick [status]* - join room (or change nick)
  * *!left room nick [status]* - leave the room
+ * *!greet jid room@server greet* - Message to main, when user enter the room
+ * *!farewell jid room@server buy* - Message to main, when user lefts the room
+ * *!idle nick* - time of nick silence.
  * *!quit* - quit :)
  * *!version* - show version of bot
 
