@@ -22,3 +22,8 @@
 
 === admin commands: ===
 !set, !gc, !msg, !join, !left, !quit
+
+=== available syntaxis of commands ===
+ * !command arg=set
+ * !command option_1 option_2 ... option_N (without spaces in words)
+ * !command "option 1" "option 2" ... "option N" (with spaces)
