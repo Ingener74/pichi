@@ -5,7 +5,7 @@ Jabber server configuration:
 {{{
 <option Name="server" type="string">*JABBER_SERVER*</option>
 <option Name="port" type="int">*5222*</option>
-<option Name="room" type="string">*ROOM*@conference.jabber.uruchie.org</option>
+<option Name="room" type="string">*ROOM*@conference.*JABBER_SERVER*</option>
 <option Name="db_file" type="string">*pichi.db*</option>
 }}}
 
