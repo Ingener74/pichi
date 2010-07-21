@@ -1,4 +1,6 @@
 PROJECT(pichi)
-
-ADD_EXECUTABLE(pichi main.cpp)
+LINK_LIBRARIES(gloox)
+LINK_LIBRARIES(pthread)
+LINK_LIBRARIES(sqlite3)
+ADD_EXECUTABLE(pichi src/sqlite.cpp src/pichicore.cpp main.cpp)
 
