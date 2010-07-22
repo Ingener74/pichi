@@ -21,8 +21,19 @@
 #ifndef PICHICORE_H
 #define PICHICORE_H
 
+#include "sqlite.h"
+
 class pichicore
 {
+	protected:
+		bool enabled;
+	private:
+	public:
+		sqlite *sql;
+		
+		pichicore();
+		~pichicore();
+		
 };
 
 #endif // PICHICORE_H
