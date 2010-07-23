@@ -28,4 +28,5 @@ pichicore::pichicore()
 pichicore::~pichicore()
 {
 	delete sql;
+	delete jabber;
 }

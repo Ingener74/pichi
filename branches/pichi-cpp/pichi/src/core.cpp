@@ -39,6 +39,7 @@ core::core(std::string n, std::string p, std::string s) : name(n), password(p), 
 	roomjid = JID(roomname + "@" + roomservice + "." + server + "/" + nick);
 	// Init pichi
 	pichi = new pichicore();
+	pichi->jabber = this;
 	// ----------
 	initDBStruct();
 	botstart();
@@ -49,6 +50,18 @@ core::~core()
 	delete client;
 	delete room;
 	delete pichi;
+}
+
+
+void core::sendMessage(JID jid, std::string message)
+{
+	Message::MessageType type;
+	if(jid.full() == roomjid.bare())
+		type = Message::Groupchat;
+	else
+		type = Message::Chat;
+	Message m( type, jid, message );
+	client->send( m );
 }
 
 void core::onConnect()

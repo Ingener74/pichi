@@ -59,6 +59,9 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		core(std::string n, std::string p, std::string s);
                 ~core();
 		
+		void sendMessage(JID jid, std::string message);
+		
+		// stubs
                 void onConnect();
                 void onDisconnect  (ConnectionError e){}
                 bool onTLSConnect  (const CertInfo  &info){return true;}

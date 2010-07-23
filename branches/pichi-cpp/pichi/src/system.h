@@ -23,9 +23,12 @@
 
 #include <string>
 #include <sys/stat.h>
+#include <time.h>
 
 class system
 {
+  protected:
+	static std::string timeToString(time_t, std::string);
   public:
 	system();
 	~system();

@@ -32,3 +32,13 @@ bool system::fileExists(std::string file)
 		return false;
 	} 
 }
+
+std::string system::timeToString(time_t t, std::string format)
+{
+	struct tm * ptm = localtime(&t);
+	char buf[100];
+	strftime (buf, 100, format.c_str(),  ptm);
+	std::string result(buf);
+	delete ptm;
+	return result;
+}

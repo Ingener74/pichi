@@ -18,21 +18,25 @@
 
 */
 
-#include "config.h"
+#ifndef PICHICONFIG_H
+#define PICHICONFIG_H
 
-std::string config::getOption(std::string name)
+#include <map>
+#include <string>
+#include <tinyxml.h>
+
+class pichiconfig
 {
-	return config[name];
-}
+  protected:
+	 std::map<std::string, std::string> config;
+	 TiXmlDocument* xmlfile;
+	 int version;
+  public:
+	 pichiconfig();
+	 ~pichiconfig();
+	 std::string setOption(std::string, std::string);
+	 std::string getOption(std::string);
+	 bool loadXmlConfig(std::string);
+};
 
-std::string config::setOption(std::string name, std::string value)
-{
-	config[name] = value;
-}
-
-bool config::loadXmlConfig(std::string file)
-{
-	return false; // =(
-}
-
-
+#endif // PICHICONFIG_H

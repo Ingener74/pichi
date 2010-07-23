@@ -22,15 +22,19 @@
 #define PICHICORE_H
 
 #include "sqlite.h"
-#include "config.h"
+#include "pichiconfig.h"
+#include <iostream>
 
-class pichicore : public config
+class core;
+
+class pichicore : public pichiconfig
 {
 	protected:
 		bool enabled;
 	private:
 	public:
 		sqlite *sql;
+		core *jabber;
 		std::multimap<std::string, std::string> config;
 		
 		pichicore();
