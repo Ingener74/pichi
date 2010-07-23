@@ -22,14 +22,16 @@
 #define PICHICORE_H
 
 #include "sqlite.h"
+#include "config.h"
 
-class pichicore
+class pichicore : public config
 {
 	protected:
 		bool enabled;
 	private:
 	public:
 		sqlite *sql;
+		std::multimap<std::string, std::string> config;
 		
 		pichicore();
 		~pichicore();

@@ -26,7 +26,7 @@ sqlite::sqlite(std::string f):dbfile(f)
 	rc = sqlite3_open(dbfile.c_str(), &db);
 	if( rc )
 	{
-		std::cout << "Db file open failed" << std::endl;
+		std::cout << static_cast<std::string>("Db file open failed with error: ") + sqlite3_errmsg(db) << std::endl;
 		sqlite3_close(db);
 		return;
 	}
@@ -50,6 +50,20 @@ bool sqlite::query(std::string sql)
 		return true;
 	else
 		return false;
+}
+
+bool sqlite::exec(std::string sql)
+{
+	char *errtext = NULL;
+  
+	if (sqlite3_exec(db, sql.c_str(), NULL, NULL, &errtext) != SQLITE_OK)
+	{
+		std::cout << static_cast<std::string>("SQL exec error: ") + errtext << std::endl;
+		sqlite3_free(errtext);
+		return false;
+	}
+	
+	return true;
 }
 
 std::multimap<std::string, std::string> sqlite::fetchArray()

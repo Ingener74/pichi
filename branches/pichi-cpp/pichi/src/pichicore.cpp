@@ -23,7 +23,6 @@
 pichicore::pichicore()
 {
 	enabled = true;
-	sql = new sqlite("pichi.db");
 }
 
 pichicore::~pichicore()

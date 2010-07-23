@@ -32,6 +32,7 @@
 #include <iostream>
 
 #include "pichicore.h"
+#include "system.h"
 
 using namespace gloox;
 
@@ -53,6 +54,7 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		MUCRoom* room;
 		
 		void botstart(void);
+		void initDBStruct(void);
 	public:
 		core(std::string n, std::string p, std::string s);
                 ~core();

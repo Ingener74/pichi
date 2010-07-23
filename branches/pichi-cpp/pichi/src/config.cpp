@@ -1,5 +1,5 @@
 /*
-    <Pichi jabber bot>
+    <one line to give the program's name and a brief idea of what it does.>
     Copyright (C) <2010>  <Alexey Kasyanchuk (deg@uruchie.org)>
 
     This program is free software; you can redistribute it and/or modify
@@ -18,35 +18,21 @@
 
 */
 
-#ifndef SQLITE_H
-#define SQLITE_H
+#include "config.h"
 
-#include <sqlite3.h>
-#include <iostream>
-#include <map>
-
-class sqlite
+std::string config::getOption(std::string name)
 {
-	private:
-		std::string dbfile;
-		
-		std::string last_query_string;
-		int last_query_status;
-		
-		sqlite3 *db;
-		sqlite3_stmt *statement;
-	public:
-		sqlite(std::string f);
-		bool query(std::string);
-		bool exec(std::string);
-		std::multimap<std::string, std::string> fetchArray(void);
-		std::string fetchColumn(int);
-		const int numColumns() const;
-		const int numRows() const;
-		const std::string escapeString(std::string);
-		bool reset();
-		void finalize();
-		~sqlite();
-};
+	return config[name];
+}
 
-#endif // SQLITE_H
+std::string config::setOption(std::string name, std::string value)
+{
+	config[name] = value;
+}
+
+bool config::loadXmlConfig(std::string file)
+{
+	return false; // =(
+}
+
+

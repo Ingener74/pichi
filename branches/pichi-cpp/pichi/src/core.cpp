@@ -37,7 +37,10 @@ core::core(std::string n, std::string p, std::string s) : name(n), password(p), 
 	roomname = "main";
 	roomservice = "conference";
 	roomjid = JID(roomname + "@" + roomservice + "." + server + "/" + nick);
-	// ----------------
+	// Init pichi
+	pichi = new pichicore();
+	// ----------
+	initDBStruct();
 	botstart();
 }
 
@@ -78,4 +81,37 @@ void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartici
 void core::handleLog (LogLevel level, LogArea area, const std::string &message)
 {
 	//std::cout << message << std::endl;
+}
+
+void core::initDBStruct(void)
+{
+	if(!system::fileExists("pichi.db"))
+	{
+		pichi->sql = new sqlite("pichi.db");
+		pichi->sql->exec("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
+		pichi->sql->exec("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
+		pichi->sql->exec("CREATE TABLE wiki (`name` TEXT, `revision` INT, `value` TEXT);");
+		pichi->sql->exec("CREATE TABLE settings (`name` TEXT, `value` TEXT, `description` TEXT);");
+		pichi->sql->exec("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT, `level` INT);");
+		pichi->sql->exec("CREATE TABLE users_data (`jid` TEXT, `name` TEXT, `value` TEXT, `groupid` TEXT);");
+		pichi->sql->exec("CREATE TABLE users_nick (`jid` TEXT, `nick` TEXT, `room` TEXT, `time` TEXT);");
+		pichi->sql->exec("CREATE TABLE stats (`name` TEXT, `value` TEXT);");
+		pichi->sql->exec("CREATE TABLE actions (`action` TEXT, `coincidence` TEXT, `do` TEXT, `option` TEXT, `value` TEXT);");
+		pichi->sql->exec("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
+  
+		pichi->sql->exec("INSERT INTO db_version (`version`) VALUES ('19');");
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_mode','1','Режим ответа на сообщения. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // Отвечать после сообщений пользователей
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_random','0','Не всегда ответь при получении сообщения. [0 - всегда отвечать; >100 фактически всегда молчать][По умолчанию: 0]');"); // отвечать не всегда (0 - всегда)
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_remember','1','Разбивать на связки слов. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // запоминать и разбивать на лексемы
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_word_limit','10','Максимальное количество связок слов в расмотрении. Влияет на алгоритм построения фраз, так же как и на нагрузку. [Рекомендуется >3 и <50][По умолчанию: 10]');"); // limit для запросов в лексемах
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('log_enabled','1','Вести лог? [0 - выключить; 1 - включить][По умолчанию: 1]');"); // вести лог ?
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('treatment_coincidence','3','Вероятность вставки обращений. [1 - всегда; >100 фактически никогда][По умолчанию: 3]');"); // вставлять обращение, совпадения (3 из 1)
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('rand_message','0','Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]');"); // случайны ответ когда скучно
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_limit','500','Максимальное количество символов, допустимое в главном чате (в противном случае пишет в личку) [По умолчанию: 500]');"); // лимит символов, после чего отправляет ответ в личку
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_max_limit','0','Верхний предел для сообщения, после которого сообщение разобьет на несколько [По умолчанию: 0]');"); // вверхний предел
+	}
+	else
+	{
+		pichi->sql = new sqlite("pichi.db");
+	}
 }
