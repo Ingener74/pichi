@@ -33,7 +33,7 @@ std::string pichiconfig::setOption(std::string name, std::string value)
 
 bool pichiconfig::loadXmlConfig(std::string file)
 {
-	TiXmlDocument *xmlfile = new TiXmlDocument(file);
+	xmlfile = new TiXmlDocument(file);
 	if(!xmlfile->LoadFile())
 		return false;
 	
@@ -44,14 +44,13 @@ bool pichiconfig::loadXmlConfig(std::string file)
 	version = atoi(xmllevel->GetText()); // get version
 	xmllevel = xmlfile->FirstChildElement("PichiConfig");
 	xmllevel = xmllevel->FirstChildElement("config");
+	xmllevel = xmllevel->FirstChildElement("option");
 	
 	while(xmllevel != NULL)
 	{
-		xmllevel = xmllevel->NextSiblingElement("option");
-		if(xmllevel != NULL)
-		{
+		if(xmllevel->GetText() != NULL)
 			config[ xmllevel->Attribute("Name") ] = static_cast<std::string>(xmllevel->GetText());
-		}
+		xmllevel = xmllevel->NextSiblingElement("option");
 	} 
 	
 	delete xmllevel;

@@ -30,6 +30,7 @@
 #include <gloox/connectionlistener.h>
 #include <gloox/presence.h>
 #include <iostream>
+#include <list>
 
 #include "pichicore.h"
 #include "system.h"
@@ -51,7 +52,7 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 	protected:
 		pichicore* pichi;
 	  	Client* client;
-		MUCRoom* room;
+		std::list< std::pair<JID, MUCRoom*> > rooms;
 		
 		void botstart(void);
 		void initDBStruct(void);
@@ -60,6 +61,8 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
                 ~core();
 		
 		void sendMessage(JID jid, std::string message);
+		void enterRoom(JID room);
+		void leftRoom(JID room);
 		
 		// stubs
                 void onConnect();

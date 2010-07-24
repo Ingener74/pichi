@@ -26,7 +26,7 @@ void core::botstart(void)
 	client->logInstance().registerLogHandler(LogLevelDebug, LogAreaAll, this);
 	client->registerConnectionListener( this );
 	client->registerMessageHandler( this );
-	room = new MUCRoom(client, roomjid, this, NULL);
+	enterRoom(roomjid);
 	client->connect();
 }
 
@@ -47,8 +47,9 @@ core::core(std::string n, std::string p, std::string s) : name(n), password(p), 
 
 core::~core()
 {
+	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
+		delete (it->second);
 	delete client;
-	delete room;
 	delete pichi;
 }
 
@@ -64,9 +65,28 @@ void core::sendMessage(JID jid, std::string message)
 	client->send( m );
 }
 
+void core::enterRoom(JID room)
+{
+	MUCRoom* newroom = new MUCRoom(client, room, this, NULL);
+	rooms.push_back(std::pair<JID, MUCRoom*>(room,newroom));
+}
+
+void core::leftRoom(JID room)
+{
+	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
+	{
+		if(it->first == room)
+		{
+			it->second->leave();
+			delete (it->second);
+		}
+	}
+}
+
 void core::onConnect()
 {
-	room->join();
+	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
+		it->second->join();
 }
 
 void core::handleMessage( const Message& msg, MessageSession* session = 0 )
