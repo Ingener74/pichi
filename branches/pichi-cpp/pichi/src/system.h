@@ -24,17 +24,22 @@
 #include <string>
 #include <sys/stat.h>
 #include <time.h>
+#include <vector>
+#include <boost/algorithm/string/regex.hpp>
 
 class system
 {
   protected:
-	static std::string timeToString(time_t, std::string);
+	
   public:
 	system();
 	~system();
 	
 	static bool fileExists(std::string);
-	
+	static std::vector< std::string > explode(std::string seperator, std::string str);
+	static std::string implode(std::string, std::vector< std::string >);
+	static std::string timeToString(time_t, std::string);
+	template<typename compT> static bool in_array(compT&, std::vector<compT>&);
 };
 
 #endif // SYSTEM_H

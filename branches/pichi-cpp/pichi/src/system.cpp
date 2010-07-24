@@ -42,3 +42,31 @@ std::string system::timeToString(time_t t, std::string format)
 	delete ptm;
 	return result;
 }
+
+std::vector< std::string > system::explode(std::string seperator, std::string str)
+{
+	std::vector< std::string > ret;
+	boost::split_regex( ret, str, boost::regex( seperator ) ) ;
+	return ret;
+}
+
+std::string system::implode(std::string seperator, std::vector< std::string > strs)
+{
+	  std::string ret;
+
+	  for(std::vector< std::string >::iterator it = strs.begin(), tempit; it != strs.end(); it++, tempit = it)
+	  {
+		tempit++;
+		if(tempit == strs.end())
+			ret += (*it);
+		else
+			ret += (*it) + seperator;
+	  }
+	 return ret;
+}
+
+template<typename compT> bool system::in_array(compT& val, std::vector<compT>& array)
+{
+	return (std::find(array.begin(), array.end(), val) != array.end());
+}
+
