@@ -40,7 +40,11 @@ class pichicore : public pichiconfig
 		time_t wait_time;
 		
 		bool isEnabled(void);
-		void setUserInfo(std::string jid, std::string nick, std::string state, std::string room, std::string role, std::string status);
+		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
+		void cleanUserInfo(void);
+		
+		bool isJID(std::string&);
+		std::string getJID(std::string, std::string, bool);
 		
 		pichicore();
 		~pichicore();

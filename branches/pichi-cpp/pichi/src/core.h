@@ -52,13 +52,14 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 	protected:
 		pichicore* pichi;
 	  	Client* client;
-		std::list< std::pair<JID, MUCRoom*> > rooms;
 		
 		void botstart(void);
 		void initDBStruct(void);
 	public:
 		core(std::string n, std::string p, std::string s);
                 ~core();
+		
+		std::list< std::pair<JID, MUCRoom*> > rooms;
 		
 		void sendMessage(JID jid, std::string message);
 		void enterRoom(JID room);

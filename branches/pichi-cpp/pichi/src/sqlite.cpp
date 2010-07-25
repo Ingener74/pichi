@@ -77,19 +77,18 @@ std::multimap<std::string, std::string> sqlite::fetchArray()
 		int cols = sqlite3_column_count(statement);
 		for(int col = 0; col < cols; col++)
 			row.insert(std::pair<std::string, std::string>((char*)sqlite3_column_name(statement, col), (char*)sqlite3_column_text(statement, col)));
-		
-		return row;
 	}
+	
+	return row;
 }
 
 std::string sqlite::fetchColumn(int num)
 {
-	std::string retnull("");
 	int result = sqlite3_step(statement);
 	if(result == SQLITE_ROW)
 		return static_cast<std::string>((char*)sqlite3_column_text(statement, num));
 	else
-		return retnull;
+		return std::string();
 }
   
 const int sqlite::numColumns() const

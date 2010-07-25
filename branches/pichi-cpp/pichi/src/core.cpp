@@ -19,6 +19,7 @@
 */
 
 #include "core.h"
+#include <time.h>
 
 void core::botstart(void)
 {
@@ -87,6 +88,8 @@ void core::onConnect()
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 		it->second->join();
+	pichi->wait = time(NULL);
+	pichi->cleanUserInfo();
 }
 
 void core::handleMessage( const Message& msg, MessageSession* session = 0 )

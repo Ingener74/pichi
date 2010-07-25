@@ -19,6 +19,7 @@
 */
 
 #include "pichicore.h"
+#include "core.h"
 
 pichicore::pichicore()
 {
@@ -99,5 +100,49 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 		sql->query("SELECT COUNT(*) FROM users_nick WHERE jid = '" + sql->escapeString(jid) + "' AND nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "';");
 		if(system::atoi(sql->fetchColumn(0)) == 0)
 			sql->exec("INSERT INTO users_nick (`jid`,`nick`,`room`,`time`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(nick) + "','" + sql->escapeString(room) + "','" + system::stringTime(time(NULL)) + "');");
+}
+
+void pichicore::cleanUserInfo(void)
+{
+	sql->exec("UPDATE users SET status = 'unavailable';");
+}
+
+bool pichicore::isJID(std::string& jid)
+{
+	return (std::find(jid.begin(), jid.end(), '@') != jid.end());
+}
+
+
+std::string pichicore::getJID(std::string nick, std::string room = std::string(), bool full_search = false)
+{
+	//$this->log->log("Get JID from $nick", PichiLog::LEVEL_VERBOSE);
+	if(isJID(nick))
+		return nick;
+	
+	std::list< std::pair<JID, MUCRoom*> >::iterator first_room;
+	first_room = jabber->rooms.begin();
+	first_room++;
+	
+	if(room == std::string())
+		room = (*first_room).first.bare(); // main room
+	
+	sql->query("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "';");
+	std::string jid = sql->fetchColumn(0);
+	
+	if(jid != std::string())
+	{
+		return jid;
+	}
+	else
+	{
+		if(full_search)
+		{
+			sql->query("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "' ORDER BY `time` ASC;");
+			jid = sql->fetchColumn(0);
+			if(jid != std::string())
+				return jid;
+		}
+		return false;
+	}
 }
 
