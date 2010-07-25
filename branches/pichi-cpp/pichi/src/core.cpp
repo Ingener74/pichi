@@ -19,7 +19,6 @@
 */
 
 #include "core.h"
-#include <time.h>
 
 void core::botstart(void)
 {
@@ -112,7 +111,7 @@ void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartici
 	
 	if(presence.presence() != Presence::Unavailable)
 	{
-		std::cout << "Онлайн: [" << participant.jid->full() << "] " << participant.status << std::endl;
+		std::cout << "Онлайн: [" << participant.jid->full() << "] " << std::endl;
 		pichi->setUserInfo(participant.jid->bare(), participant.nick->resource(), "unavailable", participant.nick->bare(), role, participant.status);
 	}
 	else

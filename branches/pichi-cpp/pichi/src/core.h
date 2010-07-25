@@ -31,6 +31,7 @@
 #include <gloox/presence.h>
 #include <iostream>
 #include <list>
+#include <time.h>
 
 #include "pichicore.h"
 #include "system.h"

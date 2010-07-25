@@ -44,7 +44,9 @@ class pichicore : public pichiconfig
 		void cleanUserInfo(void);
 		
 		bool isJID(std::string&);
-		std::string getJID(std::string, std::string, bool);
+		std::string getJID(std::string nick, std::string room = "", bool full_search = false);
+		std::string getName(std::string jid, std::string room = "");
+		std::string getDefaultRoom(void);
 		
 		pichicore();
 		~pichicore();

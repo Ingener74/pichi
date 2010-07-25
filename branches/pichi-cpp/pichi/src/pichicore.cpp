@@ -113,18 +113,14 @@ bool pichicore::isJID(std::string& jid)
 }
 
 
-std::string pichicore::getJID(std::string nick, std::string room = std::string(), bool full_search = false)
+std::string pichicore::getJID(std::string nick, std::string room, bool full_search)
 {
 	//$this->log->log("Get JID from $nick", PichiLog::LEVEL_VERBOSE);
 	if(isJID(nick))
 		return nick;
-	
-	std::list< std::pair<JID, MUCRoom*> >::iterator first_room;
-	first_room = jabber->rooms.begin();
-	first_room++;
-	
+		
 	if(room == std::string())
-		room = (*first_room).first.bare(); // main room
+		room = getDefaultRoom(); // main room
 	
 	sql->query("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "';");
 	std::string jid = sql->fetchColumn(0);
@@ -146,3 +142,32 @@ std::string pichicore::getJID(std::string nick, std::string room = std::string()
 	}
 }
 
+std::string pichicore::getDefaultRoom(void)
+{
+	std::list< std::pair<JID, MUCRoom*> >::iterator first_room;
+	first_room = jabber->rooms.begin();
+	return (*first_room).first.bare();
+}
+
+std::string pichicore::getName(std::string jid, std::string room)
+{
+	//$this->log->log("Get Nick from JID $jid", PichiLog::LEVEL_VERBOSE);
+	if(!isJID(jid))
+		return jid;
+	
+	std::vector< std::string > exp = system::explode("/", jid);
+	if(exp.size() != 2)
+	{
+		if(room == std::string())
+			room = getDefaultRoom(); // main room
+		sql->query("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+		std::string name = sql->fetchColumn(0);
+		return name;
+	}
+	else
+	{
+		std::vector< std::string >::iterator it = exp.end();
+		it--;
+		return (*it);
+	}
+}
