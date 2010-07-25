@@ -26,6 +26,7 @@
 #include <time.h>
 #include <vector>
 #include <boost/algorithm/string/regex.hpp>
+#include <boost/lexical_cast.hpp>
 
 class system
 {
@@ -39,6 +40,9 @@ class system
 	static std::vector< std::string > explode(std::string seperator, std::string str);
 	static std::string implode(std::string, std::vector< std::string >);
 	static std::string timeToString(time_t, std::string);
+	static std::string stringTime(time_t);
+	static std::string itoa(int);
+	static int atoi(std::string);
 	template<typename compT> static bool in_array(compT&, std::vector<compT>&);
 };
 

@@ -84,12 +84,12 @@ std::multimap<std::string, std::string> sqlite::fetchArray()
 
 std::string sqlite::fetchColumn(int num)
 {
-	std::string ret;
+	std::string retnull("");
 	int result = sqlite3_step(statement);
 	if(result == SQLITE_ROW)
 		return static_cast<std::string>((char*)sqlite3_column_text(statement, num));
 	else
-		return NULL;
+		return retnull;
 }
   
 const int sqlite::numColumns() const
@@ -115,7 +115,7 @@ void sqlite::finalize()
 	sqlite3_finalize(statement);
 }
 
-const std::string escapeString(std::string sql)
+const std::string sqlite::escapeString(std::string sql)
 {
 	return static_cast<std::string>(sqlite3_mprintf("%q", sql.c_str())); 
 }

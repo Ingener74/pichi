@@ -70,3 +70,21 @@ template<typename compT> bool system::in_array(compT& val, std::vector<compT>& a
 	return (std::find(array.begin(), array.end(), val) != array.end());
 }
 
+template bool system::in_array<std::string>(std::string& val, std::vector<std::string>& array);
+
+std::string system::stringTime(time_t time)
+{
+	return boost::lexical_cast<std::string>(time);
+}
+
+int system::atoi(std::string str)
+{
+	return boost::lexical_cast<int>( str );
+}
+
+std::string system::itoa(int num)
+{
+	return boost::lexical_cast<std::string>( num );
+}
+
+

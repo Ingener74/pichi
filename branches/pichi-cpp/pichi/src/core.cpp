@@ -101,13 +101,21 @@ void core::handleMUCMessage (MUCRoom *thisroom, const Message &msg, bool priv )
 
 void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomParticipant  participant, const Presence &presence)
 {
+	std::string role;
+	if(participant.role == 3)
+		role = "moderator";
+	else
+		role = "participant";
+	
 	if(presence.presence() != Presence::Unavailable)
 	{
-		std::cout << "Онлайн: " << participant.jid->full() << std::endl;
+		std::cout << "Онлайн: [" << participant.jid->full() << "] " << participant.status << std::endl;
+		pichi->setUserInfo(participant.jid->bare(), participant.nick->resource(), "unavailable", participant.nick->bare(), role, participant.status);
 	}
 	else
 	{
 		std::cout << "Оффлайн: " << participant.jid->full() << std::endl;
+		pichi->setUserInfo(participant.jid->bare(), participant.nick->resource(), "unavailable", participant.nick->bare(), role, participant.status);
 	}
 }
 

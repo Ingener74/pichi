@@ -23,23 +23,30 @@
 
 #include "sqlite.h"
 #include "pichiconfig.h"
-#include <iostream>
+#include "system.h"
+#include <string>
+#include <vector>
+#include <time.h>
 
 class core;
 
 class pichicore : public pichiconfig
 {
-	protected:
-		bool enabled;
-	private:
 	public:
 		sqlite *sql;
 		core *jabber;
-		std::multimap<std::string, std::string> config;
+		
+		time_t wait;
+		time_t wait_time;
+		
+		bool isEnabled(void);
+		void setUserInfo(std::string jid, std::string nick, std::string state, std::string room, std::string role, std::string status);
 		
 		pichicore();
 		~pichicore();
-		
+	protected:
+		bool enabled;
+	private:
 };
 
 #endif // PICHICORE_H
