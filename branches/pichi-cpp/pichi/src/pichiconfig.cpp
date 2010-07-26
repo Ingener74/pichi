@@ -21,12 +21,12 @@
 #include "pichiconfig.h"
 
 
-std::string pichiconfig::getOption(std::string name)
+std::string pichiconfig::getConfigOption(std::string name)
 {
 	return config[name];
 }
 
-std::string pichiconfig::setOption(std::string name, std::string value)
+std::string pichiconfig::setConfigOption(std::string name, std::string value)
 {
 	config[name] = value;
 }

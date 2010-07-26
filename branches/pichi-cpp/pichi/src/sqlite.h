@@ -39,7 +39,7 @@ class sqlite
 		sqlite(std::string f);
 		bool query(std::string);
 		bool exec(std::string);
-		std::multimap<std::string, std::string> fetchArray(void);
+		std::map<std::string, std::string> fetchArray(void);
 		std::string fetchColumn(int);
 		const int numColumns() const;
 		const int numRows() const;

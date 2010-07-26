@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <2010>  <Alexey Kasyanchuk (deg@uruchie.org)>
+    Copyright (C) <year>  <name of author>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,25 +18,22 @@
 
 */
 
-#ifndef PICHICONFIG_H
-#define PICHICONFIG_H
+#ifndef PICHIOPTIONS_H
+#define PICHIOPTIONS_H
 
+#include "sqlite.h"
 #include <map>
 #include <string>
-#include <tinyxml.h>
 
-class pichiconfig
+class pichioptions
 {
-  protected:
-	 std::map<std::string, std::string> config;
-	 TiXmlDocument* xmlfile;
-	 int version;
   public:
-	 pichiconfig();
-	 ~pichiconfig();
-	 std::string setConfigOption(std::string, std::string);
-	 std::string getConfigOption(std::string);
-	 bool loadXmlConfig(std::string);
+	bool reloadSqlConfig(void);
+	void setSqlOption(std::string name, std::string value);
+	std::string getSqlOption(std::string name);
+  protected:
+	sqlite **sql_options;
+	std::map<std::string, std::string> options;
 };
 
-#endif // PICHICONFIG_H
+#endif // PICHIOPTIONS_H

@@ -42,6 +42,7 @@ core::core(std::string n, std::string p, std::string s) : name(n), password(p), 
 	pichi->jabber = this;
 	// ----------
 	initDBStruct();
+	pichi->reloadSqlConfig();
 	botstart();
 }
 
@@ -56,11 +57,15 @@ core::~core()
 
 void core::sendMessage(JID jid, std::string message)
 {
-	Message::MessageType type;
-	if(jid.full() == roomjid.bare())
-		type = Message::Groupchat;
-	else
-		type = Message::Chat;
+	Message::MessageType type = Message::Chat;
+	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
+	{
+		if(jid.full() == (*it).first.bare())
+		{
+			type = Message::Groupchat;
+			break;
+		}
+	}
 	Message m( type, jid, message );
 	client->send( m );
 }

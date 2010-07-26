@@ -25,6 +25,7 @@ pichicore::pichicore()
 {
 	enabled = true;
 	wait_time = 5;
+	sql_options = & sql;
 }
 
 pichicore::~pichicore()
@@ -231,8 +232,8 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 	//($hook = PichiPlugin::fetch_hook('pichicore_message_recive_begin')) ? eval($hook) : false;
 	//$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
 	
-	//if(enabled && !isCommand(last_message) && $this->options['log_enabled'] == 1)
-	//	sql->exec("INSERT INTO log (`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString($this->last_from) + "','" + sql->escapeString(time()) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
+	if(enabled && !isCommand(last_message) && options["log_enabled"] == "1")
+		sql->exec("INSERT INTO log (`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString(last_from) + "','" + sql->escapeString(system::stringTime(time(NULL))) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
 		
 	//to lexems massges
 	//if($this->enabled && !$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
@@ -241,4 +242,33 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 	//($hook = PichiPlugin::fetch_hook('pichicore_message_recive_complete')) ? eval($hook) : false;
 		
 	return true;
+}
+
+void pichicore::sendAnswer(std::string message)
+{
+	std::string to;
+	if(last_type == "groupchat")
+		to = last_room;
+	else
+		to = last_from;
+	
+	//if(message.size() > $this->options['msg_limit'] && $this->options['msg_limit'] > 1 && $this->last_type == "groupchat")
+	//	to = last_jid;
+	//($hook = PichiPlugin::fetch_hook('pichicore_answer_send')) ? eval($hook) : false;
+	
+	if(to == "")
+		return;
+	
+	//if($this->options['msg_max_limit'] > 0)
+	//	foreach(self::str_split_unicode($message, (int)$this->options['msg_max_limit']) as $msg)
+	//		$this->jabber->message($to, $msg, $type);
+	//else
+		jabber->sendMessage(JID(to), message);
+	
+	//$this->log->log("Send answer to $to:\n$message", PichiLog::LEVEL_VERBOSE);
+}
+
+bool pichicore::isCommand(std::string& str)
+{
+	return (str.substr(0,1) == "!");
 }

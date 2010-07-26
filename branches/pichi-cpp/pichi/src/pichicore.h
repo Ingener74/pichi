@@ -23,15 +23,17 @@
 
 #include "sqlite.h"
 #include "pichiconfig.h"
+#include "pichioptions.h"
 #include "lastmessage.h"
 #include "system.h"
 #include <string>
 #include <vector>
 #include <time.h>
+#include <gloox/jid.h>
 
 class core;
 
-class pichicore : public pichiconfig, lastmessage
+class pichicore : public pichiconfig, lastmessage, public pichioptions
 {
 	public:
 		sqlite *sql;
@@ -44,11 +46,13 @@ class pichicore : public pichiconfig, lastmessage
 		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
 		void cleanUserInfo(void);
 		bool reciveMessage(std::string message, std::string type, std::string from, std::string jid = "", std::string room = "", int level = 2);
+		void sendAnswer(std::string message);
 		
 		bool isJID(std::string&);
 		std::string getJID(std::string nick, std::string room = "", bool full_search = false);
 		std::string getName(std::string jid, std::string room = "");
 		std::string getDefaultRoom(void);
+		bool isCommand(std::string& str);
 		
 		pichicore();
 		~pichicore();

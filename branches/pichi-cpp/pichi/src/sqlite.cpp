@@ -66,9 +66,9 @@ bool sqlite::exec(std::string sql)
 	return true;
 }
 
-std::multimap<std::string, std::string> sqlite::fetchArray()
+std::map<std::string, std::string> sqlite::fetchArray()
 {
-	std::multimap<std::string, std::string> row;
+	std::map<std::string, std::string> row;
 	int result;
 	
 	result = sqlite3_step(statement);
