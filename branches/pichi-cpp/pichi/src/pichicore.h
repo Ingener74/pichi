@@ -23,6 +23,7 @@
 
 #include "sqlite.h"
 #include "pichiconfig.h"
+#include "lastmessage.h"
 #include "system.h"
 #include <string>
 #include <vector>
@@ -30,7 +31,7 @@
 
 class core;
 
-class pichicore : public pichiconfig
+class pichicore : public pichiconfig, lastmessage
 {
 	public:
 		sqlite *sql;
@@ -42,6 +43,7 @@ class pichicore : public pichiconfig
 		bool isEnabled(void);
 		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
 		void cleanUserInfo(void);
+		bool reciveMessage(std::string message, std::string type, std::string from, std::string jid = "", std::string room = "", int level = 2);
 		
 		bool isJID(std::string&);
 		std::string getJID(std::string nick, std::string room = "", bool full_search = false);
@@ -52,6 +54,8 @@ class pichicore : public pichiconfig
 		~pichicore();
 	protected:
 		bool enabled;
+		
+		bool isAccess(int level = 2, std::string jid = "", std::string room = "", bool room_hook = false);
 	private:
 };
 

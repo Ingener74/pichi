@@ -138,7 +138,7 @@ std::string pichicore::getJID(std::string nick, std::string room, bool full_sear
 			if(jid != std::string())
 				return jid;
 		}
-		return false;
+		return std::string();
 	}
 }
 
@@ -161,13 +161,84 @@ std::string pichicore::getName(std::string jid, std::string room)
 		if(room == std::string())
 			room = getDefaultRoom(); // main room
 		sql->query("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
-		std::string name = sql->fetchColumn(0);
-		return name;
+		return (sql->fetchColumn(0));
 	}
 	else
 	{
-		std::vector< std::string >::iterator it = exp.end();
-		it--;
-		return (*it);
+		return exp[1];
 	}
+}
+
+bool pichicore::isAccess(int level, std::string jid, std::string room, bool room_hook)
+{
+	if(jid == "")
+		jid = last_jid;
+	
+	if(jid == "")
+		return false;
+	
+	if(room == std::string() && !room_hook)
+		room = getDefaultRoom(); // main room
+	
+	sql->query("SELECT `level` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+	int dblevel = system::atoi(sql->fetchColumn(0));
+	
+	//$this->log->log("Test access to {$jid}: {$dblevel} >= {$level}", PichiLog::LEVEL_VERBOSE);
+	
+	if(dblevel >= level)
+		return true;
+	else
+		return false;
+}
+
+bool pichicore::reciveMessage(std::string message, std::string type, std::string from, std::string jid, std::string room, int level)
+{
+	if(time(NULL) - wait < wait_time)
+	{
+		//$this->log->log("Ignore Message: <$from> $message", PichiLog::LEVEL_DEBUG);
+		return false;
+	}
+  
+	if(message == "" || from == "" || type == "")
+		return false;
+	
+	last_message = message;
+	last_from = from;
+	last_type = type;
+	
+	if(room == "")
+		if(last_type == "groupchat")
+			last_room = getJID(last_from);
+		else
+			last_room = "";
+	else
+		last_room = room;
+	
+	if(jid == "")
+		if(last_type == "groupchat")
+			last_jid = getJID(getName(last_from), last_room);
+		else
+			last_jid = getJID(last_from);
+	else
+		last_jid = jid;
+		
+	if(!isAccess(1, last_jid, last_room, true))
+	{
+		//$this->log->log("Ignore this message", PichiLog::LEVEL_DEBUG);
+		return false;
+	}
+	
+	//($hook = PichiPlugin::fetch_hook('pichicore_message_recive_begin')) ? eval($hook) : false;
+	//$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
+	
+	//if(enabled && !isCommand(last_message) && $this->options['log_enabled'] == 1)
+	//	sql->exec("INSERT INTO log (`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString($this->last_from) + "','" + sql->escapeString(time()) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
+		
+	//to lexems massges
+	//if($this->enabled && !$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
+	//	$this->syntax->parseText($this->last_message);
+		
+	//($hook = PichiPlugin::fetch_hook('pichicore_message_recive_complete')) ? eval($hook) : false;
+		
+	return true;
 }

@@ -94,11 +94,13 @@ void core::onConnect()
 void core::handleMessage( const Message& msg, MessageSession* session = 0 )
 {
 	std::cout << msg.body()  << std::endl;
+	pichi->reciveMessage(msg.body(), "chat", msg.from().full());
 }
 
 void core::handleMUCMessage (MUCRoom *thisroom, const Message &msg, bool priv )
 {
 	std::cout << msg.body()  << std::endl;
+	pichi->reciveMessage(msg.body(), "groupchat", msg.from().full());
 }
 
 void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomParticipant  participant, const Presence &presence)
@@ -112,7 +114,7 @@ void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartici
 	if(presence.presence() != Presence::Unavailable)
 	{
 		std::cout << "Онлайн: [" << participant.jid->full() << "] " << std::endl;
-		pichi->setUserInfo(participant.jid->bare(), participant.nick->resource(), "unavailable", participant.nick->bare(), role, participant.status);
+		pichi->setUserInfo(participant.jid->bare(), participant.nick->resource(), "available", participant.nick->bare(), role, participant.status);
 	}
 	else
 	{
