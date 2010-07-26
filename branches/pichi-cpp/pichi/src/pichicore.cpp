@@ -118,7 +118,10 @@ std::string pichicore::getJID(std::string nick, std::string room, bool full_sear
 {
 	//$this->log->log("Get JID from $nick", PichiLog::LEVEL_VERBOSE);
 	if(isJID(nick))
-		return nick;
+	{
+		std::vector< std::string > exp = system::explode("/", nick);
+		return exp[0];
+	}
 		
 	if(room == std::string())
 		room = getDefaultRoom(); // main room

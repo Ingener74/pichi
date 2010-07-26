@@ -42,6 +42,7 @@ bool sqlite::query(std::string sql)
 {  
 	if(sql != last_query_string)
 	{
+		finalize();
 		last_query_string = sql;
 		last_query_status = sqlite3_prepare_v2(db, sql.c_str(), -1, &statement, 0);
 	}
