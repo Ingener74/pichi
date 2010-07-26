@@ -185,7 +185,10 @@ bool pichicore::isAccess(int level, std::string jid, std::string room, bool room
 		room = getDefaultRoom(); // main room
 	
 	sql->query("SELECT `level` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
-	int dblevel = system::atoi(sql->fetchColumn(0));
+	std::string tempresult = sql->fetchColumn(0);
+	if(tempresult == "")
+		return false;
+	int dblevel = system::atoi(tempresult);
 	
 	//$this->log->log("Test access to {$jid}: {$dblevel} >= {$level}", PichiLog::LEVEL_VERBOSE);
 	
@@ -244,6 +247,9 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 		
 	//($hook = PichiPlugin::fetch_hook('pichicore_message_recive_complete')) ? eval($hook) : false;
 		
+	
+	if(isCommand(last_message))
+		sendAnswer("FAIL!!");
 	return true;
 }
 
@@ -255,14 +261,14 @@ void pichicore::sendAnswer(std::string message)
 	else
 		to = last_from;
 	
-	//if(message.size() > $this->options['msg_limit'] && $this->options['msg_limit'] > 1 && $this->last_type == "groupchat")
-	//	to = last_jid;
+	if(message.size() > system::atoi(options["msg_limit"]) && system::atoi(options["msg_limit"]) > 1 && last_type == "groupchat")
+		to = last_jid;
 	//($hook = PichiPlugin::fetch_hook('pichicore_answer_send')) ? eval($hook) : false;
 	
 	if(to == "")
 		return;
 	
-	//if($this->options['msg_max_limit'] > 0)
+	//if(system::atot(options["msg_max_limit"]) > 0)
 	//	foreach(self::str_split_unicode($message, (int)$this->options['msg_max_limit']) as $msg)
 	//		$this->jabber->message($to, $msg, $type);
 	//else

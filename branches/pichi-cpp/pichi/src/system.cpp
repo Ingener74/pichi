@@ -87,4 +87,17 @@ std::string system::itoa(int num)
 	return boost::lexical_cast<std::string>( num );
 }
 
+std::vector< std::string > system::splitBySize(std::string& str, size_t size)
+{
+	std::vector< std::string > ret;
+	for(size_t cursize = 0; cursize < str.size(); cursize += size)
+		ret.push_back(str.substr(cursize, size));
+	
+	return ret;
+}
+
+size_t system::atot(std::string str)
+{
+	return boost::lexical_cast<size_t>( str );
+}
 

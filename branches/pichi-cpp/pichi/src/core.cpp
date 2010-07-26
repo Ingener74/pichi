@@ -26,6 +26,7 @@ void core::botstart(void)
 	client->logInstance().registerLogHandler(LogLevelDebug, LogAreaAll, this);
 	client->registerConnectionListener( this );
 	client->registerMessageHandler( this );
+	client->registerPresenceHandler( this );
 	enterRoom(roomjid);
 	client->connect();
 }
@@ -127,6 +128,21 @@ void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartici
 		pichi->setUserInfo(participant.jid->bare(), participant.nick->resource(), "unavailable", participant.nick->bare(), role, participant.status);
 	}
 }
+
+void core::handlePresence(const Presence& presence)
+{
+	if(presence.presence() != Presence::Unavailable)
+	{
+		std::cout << "Онлайн контакт: [" << presence.from().bare() << "] " << std::endl;
+		pichi->setUserInfo(presence.from().bare(), "", "available", "", "participant", presence.status());
+	}
+	else
+	{
+		std::cout << "Оффлайн контакт: " << presence.from().bare() << std::endl;
+		pichi->setUserInfo(presence.from().bare(), "", "unavailable", "", "participant", presence.status());
+	}
+}
+
 
 void core::handleLog (LogLevel level, LogArea area, const std::string &message)
 {

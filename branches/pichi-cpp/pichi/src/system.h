@@ -42,7 +42,9 @@ class system
 	static std::string timeToString(time_t, std::string);
 	static std::string stringTime(time_t);
 	static std::string itoa(int);
+	static std::vector< std::string > splitBySize(std::string& str, size_t size);
 	static int atoi(std::string);
+	static size_t atot(std::string);
 	template<typename compT> static bool in_array(compT&, std::vector<compT>&);
 };
 

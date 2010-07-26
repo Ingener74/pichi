@@ -23,6 +23,7 @@
 
 #include <gloox/client.h>
 #include <gloox/messagehandler.h>
+#include <gloox/presencehandler.h>
 #include <gloox/message.h>
 #include <gloox/mucroom.h>
 #include <gloox/mucroomhandler.h>
@@ -38,7 +39,7 @@
 
 using namespace gloox;
 
-class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListener
+class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListener, PresenceHandler
 {
 	private:
 		std::string name;
@@ -86,6 +87,8 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
                 void handleMUCItems (MUCRoom *thisroom, const Disco::ItemList &items){}
 
                 void handleLog (LogLevel level, LogArea area, const std::string &message);
+		
+		void handlePresence(const Presence& presence );
 
 };
 
