@@ -78,10 +78,9 @@ bool sqlite::exec(std::string sql)
 std::map<std::string, std::string> sqlite::fetchArray()
 {
 	std::map<std::string, std::string> row;
-	int result;
 	
-	result = sqlite3_step(statement);
-	if(result == SQLITE_ROW)
+	last_result_status = sqlite3_step(statement);
+	if(last_result_status == SQLITE_ROW)
 	{
 		int cols = sqlite3_column_count(statement);
 		for(int col = 0; col < cols; col++)
@@ -91,10 +90,11 @@ std::map<std::string, std::string> sqlite::fetchArray()
 	return row;
 }
 
-std::string sqlite::fetchColumn(int num)
+std::string sqlite::fetchColumn(int num, bool stay)
 {
-	int result = sqlite3_step(statement);
-	if(result == SQLITE_ROW)
+	if(!stay)
+		last_result_status = sqlite3_step(statement);
+	if(last_result_status == SQLITE_ROW)
 		return static_cast<std::string>((char*)sqlite3_column_text(statement, num));
 	else
 		return std::string();

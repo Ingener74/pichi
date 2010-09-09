@@ -101,3 +101,8 @@ size_t system::atot(std::string str)
 	return boost::lexical_cast<size_t>( str );
 }
 
+std::string system::ttoa(size_t t)
+{
+	return boost::lexical_cast<std::string>( t );
+}
+

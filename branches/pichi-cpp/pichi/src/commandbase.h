@@ -24,6 +24,7 @@
 #include "commandhandler.h"
 #include <map>
 #include <string>
+#include <algorithm>
 
 class pichicore;
 
@@ -37,6 +38,9 @@ class commandbase : public commandhandler
     void command_enable(std::string arg);
     void command_disable(std::string arg);
     void command_log(std::string arg);
+    void command_wtf(std::string arg);
+    void command_wtfcount(std::string arg);
+    void command_wtfrand(std::string arg);
     
     protected:
 	  std::map<std::string, void (commandbase::*)(std::string)> commands; 

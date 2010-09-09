@@ -33,6 +33,7 @@ class sqlite
 		std::string last_query_string;
 		int last_query_status;
 		int rows_count;
+		int last_result_status;
 		
 		sqlite3 *db;
 		sqlite3_stmt *statement;
@@ -41,7 +42,7 @@ class sqlite
 		bool query(std::string);
 		bool exec(std::string);
 		std::map<std::string, std::string> fetchArray(void);
-		std::string fetchColumn(int);
+		std::string fetchColumn(int num, bool stay = false);
 		const int numColumns() const;
 		const int numRows() const;
 		const std::string escapeString(std::string);

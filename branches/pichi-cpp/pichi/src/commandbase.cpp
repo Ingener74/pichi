@@ -28,6 +28,9 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["enable"] = &commandbase::command_enable;
 	commands["disable"] = &commandbase::command_disable;
 	commands["log"] = &commandbase::command_log;
+	commands["wtf"] = &commandbase::command_wtf;
+	commands["wtfcount"] = &commandbase::command_wtfcount;
+	commands["wtfrand"] = &commandbase::command_wtfrand;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -218,4 +221,50 @@ void commandbase::command_log(std::string arg)
 		//$this->log->log("Request log:\n$log", PichiLog::LEVEL_VERBOSE);
 		pichi->sendAnswer(log); 
 }
-	
+
+
+void commandbase::command_wtf(std::string arg)
+{
+	pichi->sql->query("SELECT `value` FROM wiki WHERE name='" + pichi->sql->escapeString(arg) + "' ORDER BY revision DESC LIMIT 0,1;");
+	std::string answer = pichi->sql->fetchColumn(0);
+	pichi->sendAnswer(answer);
+	//$this->log->log("User request wiki page \"$w[1]\" = $answer", PichiLog::LEVEL_DEBUG);
+}
+
+void commandbase::command_wtfcount(std::string arg)
+{
+	pichi->sql->query("SELECT name FROM wiki;");
+	if(pichi->sql->numRows() > 0)
+	{
+		std::vector<std::string>tmp_ar;
+		std::map<std::string, std::string> tmp;
+		while(!(tmp = pichi->sql->fetchArray()).empty())
+			tmp_ar.push_back(tmp["name"]);
+		std::unique(tmp_ar.begin(),tmp_ar.end());
+		size_t wtfnum = tmp_ar.size();
+		//pichi->sendAnswer("".PichiLang::get('command_wiki_count').": $wtfnum");
+		pichi->sendAnswer(system::ttoa(wtfnum));
+	}
+	else
+	{
+		//pichi->sendAnswer(PichiLang::get('command_wiki_nodef'));
+	}
+}
+
+void commandbase::command_wtfrand(std::string arg)
+{
+	pichi->sql->query("SELECT name FROM wiki ORDER BY RANDOM() LIMIT 0,1;");
+	if(pichi->sql->numRows() > 0)
+	{
+		pichi->sql->query("SELECT name,value FROM wiki WHERE name = '" + pichi->sql->escapeString(pichi->sql->fetchColumn(0)) + "' ORDER BY revision DESC LIMIT 0,1;");
+		std::string wtfword = pichi->sql->fetchColumn(0);
+		std::string wtfdef = pichi->sql->fetchColumn(1, true);
+		if(wtfword != "" && wtfdef != "")
+			pichi->sendAnswer(wtfword + " = " + wtfdef);
+	}
+	else
+	{
+		//$this->sendAnswer(PichiLang::get('command_wiki_nodef'));
+		pichi->sendAnswer("Пустышка");
+	} 
+}
