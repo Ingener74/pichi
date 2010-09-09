@@ -45,6 +45,14 @@ bool sqlite::query(std::string sql)
 		finalize();
 		last_query_string = sql;
 		last_query_status = sqlite3_prepare_v2(db, sql.c_str(), -1, &statement, 0);
+		
+		// begin count rows
+		if(last_query_status != SQLITE_OK)
+			return false;
+		rows_count = 0;
+		while(sqlite3_step(statement) == SQLITE_ROW)
+			rows_count++;
+		reset();
 	}
 		
 	if(last_query_status == SQLITE_OK)
@@ -99,7 +107,7 @@ const int sqlite::numColumns() const
 
 const int sqlite::numRows() const
 {
-	return sqlite3_data_count(statement);
+	return rows_count;
 }
 
 bool sqlite::reset()
@@ -113,6 +121,7 @@ bool sqlite::reset()
 void sqlite::finalize()
 {
 	sqlite3_finalize(statement);
+	last_query_string = "";
 }
 
 const std::string sqlite::escapeString(std::string sql)

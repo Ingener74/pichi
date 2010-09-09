@@ -39,7 +39,7 @@ std::string system::timeToString(time_t t, std::string format)
 	char buf[100];
 	strftime (buf, 100, format.c_str(),  ptm);
 	std::string result(buf);
-	delete ptm;
+	//delete ptm;
 	return result;
 }
 

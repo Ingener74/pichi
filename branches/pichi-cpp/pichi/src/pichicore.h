@@ -55,13 +55,12 @@ class pichicore : public pichiconfig, lastmessage, public pichioptions
 		std::string getName(std::string jid, std::string room = "");
 		std::string getDefaultRoom(void);
 		bool isCommand(std::string& str);
+		bool isAccess(int level = 2, std::string jid = "", std::string room = "", bool room_hook = false);
 		
 		pichicore();
 		~pichicore();
 	protected:
 		bool enabled;
-		
-		bool isAccess(int level = 2, std::string jid = "", std::string room = "", bool room_hook = false);
 	private:
 };
 

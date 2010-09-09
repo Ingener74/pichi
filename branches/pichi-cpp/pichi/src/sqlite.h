@@ -32,6 +32,7 @@ class sqlite
 		
 		std::string last_query_string;
 		int last_query_status;
+		int rows_count;
 		
 		sqlite3 *db;
 		sqlite3_stmt *statement;
