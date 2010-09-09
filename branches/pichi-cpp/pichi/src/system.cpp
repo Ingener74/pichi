@@ -54,7 +54,7 @@ std::string system::implode(std::string seperator, std::vector< std::string > st
 {
 	  std::string ret;
 
-	  for(std::vector< std::string >::iterator it = strs.begin(), tempit; it != strs.end(); it++, tempit = it)
+	  for(std::vector< std::string >::iterator it = strs.begin(), tempit = strs.begin(); it != strs.end(); it++, tempit = it)
 	  {
 		tempit++;
 		if(tempit == strs.end())

@@ -18,26 +18,24 @@
 
 */
 
-#ifndef COMMANDHANDLER_H
-#define COMMANDHANDLER_H
+#ifndef COMMANDBASE_H
+#define COMMANDBASE_H
 
+#include "commandhandler.h"
+#include <map>
 #include <string>
-#include <iostream>
-#include "system.h"
 
 class pichicore;
 
-class commandhandler
+class commandbase : public commandhandler
 {
   public:
-    commandhandler(pichicore* p);
-    ~commandhandler();
-    void fetchCommand(std::string command);
-    void operator () (std::string command);
-  protected:
-    pichicore* pichi;
-    std::string last_command;
-    std::string last_args;
+    commandbase(pichicore* p);
+    
+    void command_version(std::string);
+    
+    protected:
+	  std::map<std::string, void (commandbase::*)(std::string)> commands; 
 };
 
-#endif // COMMANDHANDLER_H
+#endif // COMMANDBASE_H

@@ -26,10 +26,13 @@ pichicore::pichicore()
 	enabled = true;
 	wait_time = 5;
 	sql_options = & sql;
+	// init commander
+	commander = new commandbase(this);
 }
 
 pichicore::~pichicore()
 {
+	delete commander;
 	delete sql;
 	delete jabber;
 }
@@ -249,7 +252,8 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 		
 	
 	if(isCommand(last_message))
-		sendAnswer("FAIL!!");
+		commander->fetchCommand(last_message);
+	
 	return true;
 }
 

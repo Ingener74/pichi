@@ -18,26 +18,19 @@
 
 */
 
-#ifndef COMMANDHANDLER_H
-#define COMMANDHANDLER_H
+#include "commandbase.h"
+#include "pichicore.h"
 
-#include <string>
-#include <iostream>
-#include "system.h"
-
-class pichicore;
-
-class commandhandler
+commandbase::commandbase(pichicore* p): commandhandler(p)
 {
-  public:
-    commandhandler(pichicore* p);
-    ~commandhandler();
-    void fetchCommand(std::string command);
-    void operator () (std::string command);
-  protected:
-    pichicore* pichi;
-    std::string last_command;
-    std::string last_args;
-};
+	//base command array
+	commands["version"] = &commandbase::command_version;
+}
 
-#endif // COMMANDHANDLER_H
+void commandbase::command_version(std::string null)
+{
+	//global $config;
+	pichi->sendAnswer("Pichi Bot v.C++");
+	//($hook = PichiPlugin::fetch_hook('commands_show_version')) ? eval($hook) : false;
+	//$this->sendAnswer("".PichiLang::get('command_version_plugins').":\n" . PichiPlugin::show_plugin_list());
+}

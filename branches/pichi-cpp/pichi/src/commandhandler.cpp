@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    Copyright (C) <2010>  <Alexey Kasyanchuk (deg@uruchie.org)>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,3 +20,29 @@
 
 #include "commandhandler.h"
 
+commandhandler::commandhandler(pichicore* p)
+{
+	pichi = p;
+}
+
+
+void commandhandler::fetchCommand(std::string command)
+{
+	if(command.substr(0,1) != "!")
+		return;
+	std::string news = command.substr(1);
+	std::vector< std::string > str = system::explode(" ", news);
+	last_command = str[0];
+	str.erase(str.begin());
+	last_args = system::implode(" ", str);
+}
+
+void commandhandler::operator()(std::string command)
+{
+      
+}
+
+commandhandler::~commandhandler()
+{
+	delete pichi;
+}

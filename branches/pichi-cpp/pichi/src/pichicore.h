@@ -30,6 +30,7 @@
 #include <vector>
 #include <time.h>
 #include <gloox/jid.h>
+#include "commandbase.h"
 
 class core;
 
@@ -38,6 +39,7 @@ class pichicore : public pichiconfig, lastmessage, public pichioptions
 	public:
 		sqlite *sql;
 		core *jabber;
+		commandbase *commander;
 		
 		time_t wait;
 		time_t wait_time;
