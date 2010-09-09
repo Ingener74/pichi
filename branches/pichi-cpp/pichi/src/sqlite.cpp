@@ -49,7 +49,7 @@ bool sqlite::query(std::string sql)
 		// begin count rows
 		if(last_query_status != SQLITE_OK)
 			return false;
-		rows_count = 0;
+
 		while(sqlite3_step(statement) == SQLITE_ROW)
 			rows_count++;
 		reset();
@@ -122,6 +122,7 @@ void sqlite::finalize()
 {
 	sqlite3_finalize(statement);
 	last_query_string = "";
+	rows_count = 0;
 }
 
 const std::string sqlite::escapeString(std::string sql)
