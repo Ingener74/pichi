@@ -33,17 +33,22 @@ class commandbase : public commandhandler
   public:
     commandbase(pichicore* p);
     void fetchCommand(std::string command);
-    
-    void command_version(std::string);
-    void command_enable(std::string arg);
-    void command_disable(std::string arg);
-    void command_log(std::string arg);
-    void command_wtf(std::string arg);
-    void command_wtfcount(std::string arg);
-    void command_wtfrand(std::string arg);
-    
+        
     protected:
-	  std::map<std::string, void (commandbase::*)(std::string)> commands; 
+	  std::map<std::string, void (commandbase::*)(std::string)> commands;
+	  
+	  void command_version(std::string);
+	  void command_enable(std::string arg);
+	  void command_disable(std::string arg);
+	  void command_log(std::string arg);
+	  void command_wtf(std::string arg);
+	  void command_wtfcount(std::string arg);
+	  void command_wtfrand(std::string arg);
+	  void command_wtfrev(std::string arg);
+	  void command_wtfull(std::string arg);
+	  void command_wtfset(std::string arg);
+	  void command_top(std::string arg);
+	  void command_talkers(std::string arg);
 };
 
 #endif // COMMANDBASE_H

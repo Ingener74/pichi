@@ -31,6 +31,11 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["wtf"] = &commandbase::command_wtf;
 	commands["wtfcount"] = &commandbase::command_wtfcount;
 	commands["wtfrand"] = &commandbase::command_wtfrand;
+	commands["wtfrev"] = &commandbase::command_wtfrev;
+	commands["wtfull"] = &commandbase::command_wtfull;
+	commands["wtfset"] = &commandbase::command_wtfset;
+	commands["top"] = &commandbase::command_top;
+	commands["talkers"] = &commandbase::command_talkers;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -267,4 +272,108 @@ void commandbase::command_wtfrand(std::string arg)
 		//$this->sendAnswer(PichiLang::get('command_wiki_nodef'));
 		pichi->sendAnswer("Пустышка");
 	} 
+}
+
+void commandbase::command_wtfrev(std::string arg)
+{
+	pichi->sql->query("SELECT revision FROM wiki WHERE name = '" + pichi->sql->escapeString(arg) + "' ORDER BY revision DESC LIMIT 0,1;");
+	if(pichi->sql->numRows() > 0)
+		//pichi->sendAnswer("".PichiLang::get('command_wiki_revision').": " . $this->db->fetchColumn(0));
+		pichi->sendAnswer(pichi->sql->fetchColumn(0));
+	else
+		//pichi->sendAnswer(PichiLang::get('command_wiki_nodef'));
+		pichi->sendAnswer("не установлено");
+}
+
+void commandbase::command_wtfull(std::string arg)
+{
+	pichi->sql->query("SELECT * FROM wiki WHERE name = '" + pichi->sql->escapeString(arg) + "' ORDER BY revision DESC;");
+	std::string list_rev;
+	std::map<std::string, std::string> tmp;
+	while(!(tmp = pichi->sql->fetchArray()).empty())
+		//list_rev += "\n------- ".PichiLang::get('command_wiki_revision')." {$tmp['revision']} ({$tmp['name']}) -------\n{$tmp['value']}\n---------------------";
+		list_rev += "\n------- " + tmp["revision"] + "(" + tmp["name"] + ")" + "-------\n" + tmp["value"] + "\n---------------------";
+	if(list_rev != "")
+		pichi->sendAnswer(list_rev);
+	else
+		//pichi->sendAnswer(PichiLang::get('command_wiki_nodef'));
+		pichi->sendAnswer("отсуствует");
+}
+
+void commandbase::command_wtfset(std::string arg)
+{
+	std::vector< std::string > w = seperate(arg, 2);
+	pichi->sql->query("SELECT name,revision,value FROM wiki WHERE name = '" + pichi->sql->escapeString(w[0]) + "' AND revision='" + pichi->sql->escapeString(w[1]) + "' LIMIT 0,1;");
+	if(pichi->sql->numRows() > 0)
+	{
+		std::string name = pichi->sql->fetchColumn(0);
+		std::string rev = pichi->sql->fetchColumn(1,true);
+		std::string val = pichi->sql->fetchColumn(2,true);
+		pichi->sql->query("SELECT revision FROM wiki WHERE name = '" + pichi->sql->escapeString(name) + "' ORDER BY revision DESC LIMIT 0,1;");
+		int newrev = (system::atoi(pichi->sql->fetchColumn(0))) + 1;
+		pichi->sql->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" + pichi->sql->escapeString(name) + "','" + pichi->sql->escapeString(system::itoa(newrev)) + "','" + pichi->sql->escapeString(val) + "');");
+		//pichi->sendAnswer(PichiLang::get('command_wiki_revision_set', array($rev)));
+		pichi->sendAnswer(rev);
+	}
+	else
+	{
+		//pichi->sendAnswer(PichiLang::get('command_wiki_nodef'));
+	} 
+}
+
+void commandbase::command_top(std::string arg)
+{
+	pichi->sql->query("SELECT `lexeme`,`count` FROM lexems ORDER BY count DESC LIMIT 0,10;");
+	//pichi->sendAnswer(PichiLang::get('command_top10'));
+	pichi->sendAnswer("топ:");
+	std::string ans;
+	int ix = 0;
+	std::map<std::string, std::string> lex;
+	std::vector<std::string> tmp;
+	while(!(lex = pichi->sql->fetchArray()).empty())
+	{
+		ix++;
+		tmp = system::explode(" ", lex["lexeme"]);
+		if(tmp[0] == "#beg#")
+			//tmp[0] = "(".PichiLang::get('command_top10_begin').")";
+			tmp[0] = "(начало)";
+		if(tmp[2] == "#end#")
+			//$tmp[2] = "(".PichiLang::get('command_top10_end').")";
+			tmp[2] = "(конец)";
+		ans += system::itoa(ix) + ". " + system::implode(" ", tmp) + " [" + lex["count"] + "]" + "\n";
+	}
+	pichi->sendAnswer(ans);
+}
+
+void commandbase::command_talkers(std::string arg)
+{
+	pichi->sql->query("SELECT `from`, COUNT(*) AS `counter` FROM log GROUP BY `from` ORDER BY `counter` DESC;");
+	//pichi->sendAnswer(PichiLang::get('command_talkers'));
+	pichi->sendAnswer("топ говорливых:");
+	std::string ans;
+	std::map<std::string, std::string> fr;
+	typedef std::map< std::string, std::pair<std::string, size_t> > p_t;
+	p_t tmp;
+	int i = 0;
+	while(!(fr = pichi->sql->fetchArray()).empty() && i < 10)
+	{
+		std::string from = pichi->getJID(pichi->getName(fr["from"]), "", true);
+		if(from == "")
+			continue;
+		if(tmp[from] == std::pair<std::string, size_t>())
+		{
+			tmp[from].second = 0;
+			i++;
+		}
+		tmp[from].first = from;
+		tmp[from].second += system::atot(fr["counter"]);
+	}
+	i = 0;
+	 
+	 BOOST_FOREACH(p_t::value_type &p, tmp)
+	 {
+		//ans += PichiLang::get('command_talkers_list', array(++$i, $this->getName($key), $val)) . "\n";
+		ans += system::itoa(++i) + ". " + pichi->getName(p.second.first) + " (" + system::ttoa(p.second.second) + ")\n";
+	 }
+	pichi->sendAnswer(ans);
 }

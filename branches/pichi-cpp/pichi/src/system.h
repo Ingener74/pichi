@@ -27,6 +27,7 @@
 #include <vector>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/foreach.hpp>
 
 class system
 {

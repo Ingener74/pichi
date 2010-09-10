@@ -37,6 +37,35 @@ void commandhandler::fetchCommand(std::string command)
 	last_args = system::implode(" ", str);
 }
 
+std::vector< std::string > commandhandler::seperate(std::string str, int level)
+{
+	if(str.find("=") != std::string::npos)
+	{
+		return system::explode("=", str);
+	}
+	else if(str.find("\"") != std::string::npos)
+	{
+		std::vector< std::string > w = system::explode("\"", str);
+		std::vector< std::string > ret;
+		for(int i = 1; i < w.size(); i = i+2)
+			ret.push_back(w[i]);
+		return ret;
+	}
+	else
+	{
+		std::vector< std::string > w = system::explode(" ", str);
+		std::vector< std::string > ret, temp;
+		std::vector< std::string >::iterator it = w.begin();
+		int i;
+		for(i = 0; i < level; i++)
+			ret.push_back((*(it++)));
+		temp.resize(w.size()-i);
+		copy(it, w.end(), temp.begin());
+		ret.push_back(system::implode(" ", temp));
+		return ret;
+	}
+}
+
 void commandhandler::operator()(std::string command)
 {
       
